@@ -9,8 +9,8 @@ import os
 import pandas as pd
 
 # Define relative data directory from repo root
-data_dir = './data'
-baby_names_dir = './data/names'
+data_dir = '../data'
+baby_names_dir = '../data/names'
 
 # Get list of data files
 files = [f for f in os.listdir(baby_names_dir) if ".txt" in f]
@@ -36,4 +36,4 @@ for data_file in files:
     baby_names_df = pd.concat([baby_names_df, df])
 
 # Write this new file to disk for convienient use later.
-baby_names_df.to_csv(os.path.join('./data/', 'baby_names.csv'), index=False)
+baby_names_df.to_csv(os.path.join('../data/', 'baby_names.csv'), index=False)

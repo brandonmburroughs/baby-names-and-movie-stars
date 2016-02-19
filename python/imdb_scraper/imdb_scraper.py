@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-webpage = 'http://www.imdb.com/name/nm0000354/'
-
 
 def get_full_link(relative_link):
 
@@ -71,7 +69,7 @@ def get_actor_known_for_links(imdb_page):
             title, year = link.text.split('(')
 
             # Clean up the title and year
-            title = str(title).strip()
+            title = title.encode('ascii','ignore').strip()
             year = int(year[0:4])
 
             # Put this all in a dictionary
@@ -87,19 +85,43 @@ def get_actor_known_for_links(imdb_page):
     return known_for_movies
 
 
-# Main
-if __name__ == '__main__':
-    # The actor to search for
-    actor_name = 'Matt Damon'
+def get_actor_popular_movies(actor_name):
+    """
+    This is a wrapper function for getting an actor's page and then getting
+    their popular movies.
 
+    Parameters
+    ----------
+    actor_name : str
+        The actor's name
+
+    Returns
+    -------
+    popular_movies : list of dicts
+        The list of "Known For" movies and attributes
+
+    Note:  These links are relative to IMDB, i.e. do not contain 
+        "http://www.imdb.com/".
+    """
     # Get the actor's page
     actor_page = get_actor_page(actor_name)
 
     # Get the movies he or she is known for
-    actor_known_for_movies = get_actor_known_for_links(get_full_link(actor_page))
+    popular_movies = get_actor_known_for_links(get_full_link(actor_page))
+
+    return popular_movies
+    
+
+# Main
+if __name__ == '__main__':
+    # The actor to search for
+    actor_name = 'Leonardo DiCaprio'
+
+    # Get the actor's popular movies
+    popular_movies = get_actor_popular_movies(actor_name)
 
     # Construct string output of movies
-    movie_list = [movie['title'] for movie in actor_known_for_movies]
+    movie_list = [movie['title'] for movie in popular_movies]
     movie_list_output = ', '.join(movie_list[:-1]) + ', and ' + movie_list[-1]
 
     # Output
