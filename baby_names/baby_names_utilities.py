@@ -9,7 +9,7 @@ import os
 import pandas as pd
 
 # Define locations of data
-data_dir = '../data/'
+data_dir = './data/'
 baby_names_data_file = 'baby_names.csv'
 
 # Load baby names data file
