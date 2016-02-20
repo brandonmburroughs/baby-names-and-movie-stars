@@ -15,6 +15,20 @@ baby_names_data_file = 'baby_names.csv'
 # Load baby names data file
 baby_names_df = pd.read_csv(os.path.join(data_dir, baby_names_data_file))
 
+def load_baby_names_data():
+    """
+    Loads the baby names data
+
+    Parameters
+    ----------
+    N/A
+
+    Returns
+    -------
+    The baby names dataset
+    """
+    return pd.read_csv(os.path.join(data_dir, baby_names_data_file))
+
 # Utilities
 def segment_data(segment_dict, sort_by_column='year', baby_names_data_frame=baby_names_df):
     """ 
