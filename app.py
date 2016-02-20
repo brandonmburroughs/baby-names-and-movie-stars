@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_restful import Resource, Api, reqparse
 from baby_names import baby_names_utilities
 from imdb_scraper import imdb_scraper
@@ -39,8 +39,8 @@ api.add_resource(BabyNamesSegment, '/segment-baby-names/')
 
 # App routing
 @app.route('/')
-def hello():
-    return "Hello World!"
+def enter_name():
+    return render_template('index.html')
 
 
 # Run the app
