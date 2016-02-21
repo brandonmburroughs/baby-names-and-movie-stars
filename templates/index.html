@@ -125,23 +125,54 @@
 
     <!-- Chart Code -->
     <script type="text/javascript">
-      $(function () {
-          var processed_json = new Array();
-          $.getJSON('https://www.highcharts.com/samples/data/jsonp.php?filename=usdeur.json&callback=?', function (data) {
 
+      // Setup before functions
+      var typingTimer;                //timer identifier
+      var doneTypingInterval = 2000;  //time in ms, 5 second for example
+      var $input = $('#inputActorName');
+
+      // On keyup, start the countdown
+      $input.on('keyup', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+      });
+
+      //on keydown, clear the countdown 
+      $input.on('keydown', function () {
+        clearTimeout(typingTimer);
+      });
+
+      //user is "finished typing," do something
+      function doneTyping () {
+
+          var processed_json = new Array();
+
+          // Parse form data and get first name
+          var actor_name = $('#inputActorName').val().split(" ")[0]
+
+          $.getJSON('http://127.0.0.1:5000/segment-baby-names?name='.concat(actor_name).concat(''), function (data) {
+
+              // Parse JSON
+              parsed_json = JSON.parse(data)
+
+              // Populate series
+              for (i = 0; i < parsed_json.length; i++) {
+                processed_json.push([parsed_json[i]['year'], parsed_json[i]['count']])
+              }
+
+              // Construct chart
               $('#linechart').highcharts({
                   chart: {
                       zoomType: 'x'
                   },
                   title: {
-                      text: 'Baby Names Over Time'
+                      text: 'Baby Names Over Time: '.concat(actor_name)
                   },
                   subtitle: {
                       text: document.ontouchstart === undefined ?
                               'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
                   },
                   xAxis: {
-                      type: 'datetime',
                       title: {
                         text: 'Year'
                       }
@@ -157,11 +188,12 @@
                   series: [{
                       type: 'line',
                       name: 'Baby Name Count',
-                      data: data
+                      data: processed_json
                   }]
               });
           });
-      });
+      }
+
     </script>
 
 </body>
