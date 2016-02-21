@@ -30,7 +30,7 @@ def load_baby_names_data():
     return pd.read_csv(os.path.join(data_dir, baby_names_data_file))
 
 # Utilities
-def segment_data(segment_dict, return_fields, sort_by_column='year', baby_names_data_frame=baby_names_df):
+def segment_data(segment_dict, return_fields, single_gender=True, sort_by_column='year', baby_names_data_frame=baby_names_df):
     """ 
     Return the data with the desired baby name sorted by year
 
@@ -38,6 +38,15 @@ def segment_data(segment_dict, return_fields, sort_by_column='year', baby_names_
     ----------
     segment_dict : dict
         Key-value pairs for attribute values to segment on
+
+    return_fields : list
+        A list of fields to be returned
+
+    single_gender : boolean (default=True)
+        If True, only the majority gender is returned
+
+    sort_by_column : str (default='year')
+        The column by which the returend data is sorted
 
     baby_name_data_frame : Pandas DataFrame
         The dataframe containing the baby names data
@@ -68,6 +77,10 @@ def segment_data(segment_dict, return_fields, sort_by_column='year', baby_names_
                 print "Values of type %s are not accepted.  Please use values of type str or int." % type(value)
         except:
             print "The key %s is not recognized.  Please use keys %s." % (key, baby_names_data_frame.columns.values)
+
+    # Get max gender
+    if single_gender:
+        baby_name_segment = baby_name_segment[baby_name_segment.gender==baby_name_segment.groupby('gender').gender.count().idxmax()]
 
     # Get desired fields
     baby_name_segment = baby_name_segment[return_fields]
