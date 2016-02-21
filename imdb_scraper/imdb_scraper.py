@@ -74,7 +74,7 @@ def get_actor_known_for_links(imdb_page):
 
             # Put this all in a dictionary
             movie_dict = {
-                'link': link.get('href'),
+                'link': get_full_link(link.get('href')),
                 'title': title,
                 'year': year
             }
