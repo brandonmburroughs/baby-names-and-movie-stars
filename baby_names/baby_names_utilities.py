@@ -30,7 +30,7 @@ def load_baby_names_data():
     return pd.read_csv(os.path.join(data_dir, baby_names_data_file))
 
 # Utilities
-def segment_data(segment_dict, sort_by_column='year', baby_names_data_frame=baby_names_df):
+def segment_data(segment_dict, return_fields, sort_by_column='year', baby_names_data_frame=baby_names_df):
     """ 
     Return the data with the desired baby name sorted by year
 
@@ -68,6 +68,9 @@ def segment_data(segment_dict, sort_by_column='year', baby_names_data_frame=baby
                 print "Values of type %s are not accepted.  Please use values of type str or int." % type(value)
         except:
             print "The key %s is not recognized.  Please use keys %s." % (key, baby_names_data_frame.columns.values)
+
+    # Get desired fields
+    baby_name_segment = baby_name_segment[return_fields]
 
     # Sort
     baby_name_segment.sort_values(by=sort_by_column, inplace=True)
