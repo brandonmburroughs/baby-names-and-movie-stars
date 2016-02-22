@@ -27,6 +27,11 @@ function sortByKey(array, key) {
     });
 }
 
+// Format a number with commas
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 // The function to run when the user is finished typing
 function generateChart () {
 
@@ -107,9 +112,9 @@ function generateChart () {
                 useHTML: true,
                 formatter: function() {
                   if (this.points[1] == null) {
-                    return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + this.points[0].y + '</strong> babies named <strong>' + actor_first_name + '</strong></div>'
+                    return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong></div>'
                   } else {
-                    return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + this.points[0].y + '</strong> babies named <strong>' + actor_first_name + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[1].point.title + '</strong></div>'
+                    return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[1].point.title + '</strong></div>'
                   }
                 }
               },
