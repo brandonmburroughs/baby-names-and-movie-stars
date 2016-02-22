@@ -1,4 +1,4 @@
-# Movie Star Baby Names
+# Baby Names and Movie Stars
 
 ## Introduction
 
