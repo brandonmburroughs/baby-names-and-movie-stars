@@ -43,10 +43,10 @@ function generateChart () {
     var actor_first_name = actor_full_name.split(" ")[0];
 
     // Parse popular movies data
-    $.getJSON('http://127.0.0.1:5000/popular-movies/'.concat(actor_full_name), function (movie_data) {
+    $.getJSON('popular-movies/'.concat(actor_full_name), function (movie_data) {
 
       // Parse baby name data
-      $.getJSON('http://127.0.0.1:5000/segment-baby-names?name='.concat(actor_first_name), function (baby_data) {
+      $.getJSON('segment-baby-names?name='.concat(actor_first_name), function (baby_data) {
 
           // Sort movie data
           movie_data = sortByKey(movie_data, 'x');
