@@ -24,4 +24,4 @@ I've built functionality to do the following:
 
 ## Roadmap
 
-I'm not sure where to go from here.  I've completed all of the goals I initially laid out.  Feel free to make suggestions as a Github issue.  Otherwise, I'll update it as things come to me.
+I'm not sure where to go from here.  I've completed all of the goals I initially laid out.  Feel free to make suggestions as a Github issue.  Otherwise, I'll update it as ideas come to me.
