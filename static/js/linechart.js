@@ -4,12 +4,19 @@ var doneTypingInterval = 1000;  // Time in MS
 var $input = $('#inputActorName');
 
 // On keyup, start the countdown
-$input.on('keyup', function () {
-  clearTimeout(typingTimer);
-  typingTimer = setTimeout(generateChart, doneTypingInterval);
+$input.on('keyup', function (event) {
+  // If the "Enter" button is pressed
+  if (event.which == 13) {
+    clearTimeout(typingTimer);
+    generateChart();
+  // Otherwise
+  } else {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(generateChart, doneTypingInterval);    
+  }
 });
 
-//on keydown, clear the countdown 
+// On keydown, clear the countdown 
 $input.on('keydown', function () {
   clearTimeout(typingTimer);
 });
