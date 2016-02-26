@@ -55,6 +55,40 @@ def get_actor_page(actor_name):
     return actor_link
 
 
+def get_actor_gender(actor_name):
+    # Get actor page
+    actor_page = get_actor_page(actor_name)
+
+    # Construct the biopage
+    bio_page = get_full_link(actor_page.split('?')[0] + 'bio')
+
+    # Get page
+    r = requests.get(bio_page)
+
+    # Soup HTML
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    # Get list of results
+    search_results = soup.find('div', attrs={'class': 'soda odd'})
+
+    # Separate bio paragraph
+    bio = search_results.text.lower()
+
+    # Male count
+    male_count = bio.count(' he ') + bio.count(' him ') + bio.count(' his ')
+
+    # Female count
+    female_count = bio.count(' she') + bio.count(' her ')
+
+    # Determine gender
+    if male_count >= female_count:
+        gender = 'M'
+    else: 
+        gender = 'F'
+
+    return gender
+
+
 def get_actor_known_for_links(imdb_page):
     """
     Get an actor's "Known For" links from their IMDB page
