@@ -3,6 +3,19 @@ from bs4 import BeautifulSoup
 
 
 def get_full_link(relative_link):
+    """
+    Returns the fully qualified IMDB link when given the partial link
+
+    Parameters
+    ----------
+    relative_link : str
+        The link relative to imdb.com
+
+    Returns
+    -------
+    full_link : str
+        The full qualified IMDB link
+    """
 
     full_link = 'http://www.imdb.com' + relative_link
 
@@ -10,6 +23,19 @@ def get_full_link(relative_link):
 
 
 def get_actor_page(actor_name):
+    """
+    Get an actor's IMDB page link
+
+    Parameters
+    ----------
+    actor_name : str
+        The name of the actor
+
+    Returns
+    -------
+    actor_link : str
+        The relative link to an actor's IMDB page
+    """
     
     # Construct URL
     imdb_search = "http://www.imdb.com/find?q=%s&s=nm" % actor_name
@@ -45,7 +71,6 @@ def get_actor_known_for_links(imdb_page):
 
     Note:  These links are relative to IMDB, i.e. do not contain 
         "http://www.imdb.com/".
-
     """
     # Get page
     r = requests.get(imdb_page)
