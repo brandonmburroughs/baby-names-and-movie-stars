@@ -121,7 +121,9 @@ function generateChart () {
                   shared: true,
                   useHTML: true,
                   formatter: function() {
-                    if (this.points[1] == null) {
+                    if (this.points[0].point.title != undefined) {
+                      return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[0].point.title + '</strong></div>'
+                    } else if (this.points[1] == null) {
                       return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong></div>'
                     } else {
                       return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[1].point.title + '</strong></div>'
