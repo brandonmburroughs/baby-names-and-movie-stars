@@ -26,6 +26,10 @@ class ActorGender(Resource):
     def get(self, actor_name):
         return imdb_scraper.get_actor_gender(actor_name)
 
+class ActorNameSpelling(Resource):
+    def get(self, actor_name):
+        return imdb_scraper.get_actor_name_correct_spelling(actor_name)
+
 class BabyNamesSegment(Resource):
     def get(self):
         args = parser.parse_args()
@@ -43,6 +47,7 @@ class BabyNamesSegment(Resource):
 # Add APIs 
 api.add_resource(ActorPopularMovies, '/popular-movies/<string:actor_name>')
 api.add_resource(ActorGender, '/actor-gender/<string:actor_name>')
+api.add_resource(ActorNameSpelling, '/actor-name-spelling/<string:actor_name>')
 api.add_resource(BabyNamesSegment, '/segment-baby-names')
 
 # App routing
