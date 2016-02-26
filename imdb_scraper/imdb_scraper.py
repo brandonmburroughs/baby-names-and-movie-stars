@@ -12,7 +12,7 @@ def get_full_link(relative_link):
 def get_actor_page(actor_name):
     
     # Construct URL
-    imdb_search = "http://www.imdb.com/find?q=%s&s=nm&exact=true" % actor_name
+    imdb_search = "http://www.imdb.com/find?q=%s&s=nm" % actor_name
 
     # Get page
     r = requests.get(imdb_search)
