@@ -22,13 +22,18 @@ class ActorPopularMovies(Resource):
     def get(self, actor_name):
         return imdb_scraper.get_actor_popular_movies(actor_name)
 
+class ActorGender(Resource):
+    def get(self, actor_name):
+        return imdb_scraper.get_actor_gender(actor_name)
+
 class BabyNamesSegment(Resource):
     def get(self):
         args = parser.parse_args()
         segment = baby_names_utilities.segment_data({'name':args['name'], 
                                                       'gender':args['gender'], 
                                                      'year':args['year']},
-                                                     ['year','count'])
+                                                     ['year','count'],
+                                                     single_gender=False)
 
         segment_json = json.loads(segment.to_json(orient='records'))
         
@@ -37,6 +42,7 @@ class BabyNamesSegment(Resource):
 
 # Add APIs 
 api.add_resource(ActorPopularMovies, '/popular-movies/<string:actor_name>')
+api.add_resource(ActorGender, '/actor-gender/<string:actor_name>')
 api.add_resource(BabyNamesSegment, '/segment-baby-names')
 
 # App routing
