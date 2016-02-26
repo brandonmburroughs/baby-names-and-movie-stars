@@ -5,20 +5,20 @@ var $input = $('#inputActorName');
 
 // On keyup, start the countdown
 $input.on('keyup', function (event) {
-  // If the "Enter" button is pressed
-  if (event.which == 13) {
-    generateChart();
-    clearTimeout(typingTimer);
-  // Otherwise
-  } else {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(generateChart, doneTypingInterval);    
-  }
+    // If the "Enter" button is pressed
+    if (event.which == 13) {
+        generateChart();
+        clearTimeout(typingTimer);
+    // Otherwise
+    } else {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(generateChart, doneTypingInterval);    
+    }
 });
 
 // On keydown, clear the countdown 
 $input.on('keydown', function () {
-  clearTimeout(typingTimer);
+  
 });
 
 // Function to "proper case" names
@@ -47,128 +47,138 @@ function generateChart () {
 
     // Parse form data and get first name
     var actor_full_name = toProperCase($('#inputActorName').val());
-    var actor_first_name = actor_full_name.split(" ")[0];
 
-    // Get the actor's gender
-    $.getJSON('actor-gender/' + actor_full_name, function (actor_gender) {
+    // Get the correct spelling of the actor's name
+    $.getJSON('actor-name-spelling/' + actor_full_name, function (actor_full_name_correct) {
 
-      // Parse popular movies data
-      $.getJSON('popular-movies/' + actor_full_name, function (movie_data) {
+        // Assign correct spelling
+        actor_full_name = actor_full_name_correct;
+        var actor_first_name = actor_full_name.split(" ")[0];
 
-        // Parse baby name data
-        $.getJSON('segment-baby-names?name=' + actor_first_name + "&gender=" + actor_gender, function (baby_data) {
+        // Update form value
+        $('#inputActorName').val(actor_full_name);
 
-            // Sort movie data
-            movie_data = sortByKey(movie_data, 'x');
+        // Get the actor's gender
+        $.getJSON('actor-gender/' + actor_full_name, function (actor_gender) {
 
-            // Populate series
-            for (i = 0; i < baby_data.length; i++) {
-              // Check for movies in each year
-              year = 0;
-              for (j=0; j < movie_data.length; j++) {
-                // Find the years where movie data and baby data match.
-                // If they match, add the y value for the baby data.
-                // Also, look for cases when there were two movies for one year.
-                // If that's the case (else if), concatentate the two movies
-                // like Movie 1 & Move 2
-                if (movie_data[j]['year'] == baby_data[i]['year'] && movie_data[j]['year'] != year) {
-                  // Add data
-                  movie_processed_json.push({'x': movie_data[j]['year'], 'y': baby_data[i]['count'], 'title': '"' + movie_data[j]['title'] + '"', 'link': movie_data[j]['link']});
-                  
-                  // Set the year
-                  year = movie_data[j]['year'];
-                } else if (movie_data[j]['year'] == baby_data[i]['year'] && movie_data[j]['year'] == year) {
-                  // Concatenate titles
-                  movie_processed_json[movie_processed_json.length-1]['title'] = movie_processed_json[movie_processed_json.length-1]['title'] + ' & "' + movie_data[j]['title'] + '"';
-                }
-              }
+            // Parse popular movies data
+            $.getJSON('popular-movies/' + actor_full_name, function (movie_data) {
 
-              // Add baby data to array
-              baby_processed_json.push([baby_data[i]['year'], baby_data[i]['count']])
-            }
+                // Parse baby name data
+                $.getJSON('segment-baby-names?name=' + actor_first_name + "&gender=" + actor_gender, function (baby_data) {
 
-            // Add commas to tooltip values
-            Highcharts.setOptions({
-              lang: {
-                thousandsSep: ','
-              }
-            });
+                    // Sort movie data
+                    movie_data = sortByKey(movie_data, 'x');
 
-            // Construct chart
-            $('#linechart').highcharts({
-                chart: {
-                    zoomType: 'x'
-                },
-                title: {
-                    text: 'Baby Names Over Time: '.concat(actor_first_name)
-                },
-                subtitle: {
-                    text: document.ontouchstart === undefined ?
-                            'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-                },
-                xAxis: {
-                    title: {
-                      text: 'Year'
-                    },
-                    min: 1910
-                },
-                yAxis: {
-                    title: {
-                        text: 'Yearly Name Count'
-                    }
-                },
-                tooltip: {
-                  shared: true,
-                  useHTML: true,
-                  formatter: function() {
-                    if (this.points[0].point.title != undefined) {
-                      return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[0].point.title + '</strong></div>'
-                    } else if (this.points[1] == null) {
-                      return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong></div>'
-                    } else {
-                      return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[1].point.title + '</strong></div>'
-                    }
-                  }
-                },
-                legend: {
-                    enabled: true
-                },
-                plotOptions: {
-                    series: {
-                        states: {
-                            hover: {
-                                enabled: false
+                    // Populate series
+                    for (i = 0; i < baby_data.length; i++) {
+                        // Check for movies in each year
+                        year = 0;
+                        for (j=0; j < movie_data.length; j++) {
+                            // Find the years where movie data and baby data match.
+                            // If they match, add the y value for the baby data.
+                            // Also, look for cases when there were two movies for one year.
+                            // If that's the case (else if), concatentate the two movies
+                            // like Movie 1 & Move 2
+                            if (movie_data[j]['year'] == baby_data[i]['year'] && movie_data[j]['year'] != year) {
+                                // Add data
+                                movie_processed_json.push({'x': movie_data[j]['year'], 'y': baby_data[i]['count'], 'title': '"' + movie_data[j]['title'] + '"', 'link': movie_data[j]['link']});
+                                
+                                // Set the year
+                                year = movie_data[j]['year'];
+                            } else if (movie_data[j]['year'] == baby_data[i]['year'] && movie_data[j]['year'] == year) {
+                                // Concatenate titles
+                                movie_processed_json[movie_processed_json.length-1]['title'] = movie_processed_json[movie_processed_json.length-1]['title'] + ' & "' + movie_data[j]['title'] + '"';
                             }
-                        }
+                      }
+
+                      // Add baby data to array
+                      baby_processed_json.push([baby_data[i]['year'], baby_data[i]['count']])
                     }
-                },
-                series: [{
-                    type: 'line',
-                    name: 'Baby Name Count',
-                    data: baby_processed_json,
-                    lineWidth: 3,
-                    marker: {
-                      enabled: false
-                    },
-                    zIndex: 0
-                  },
-                  {
-                    type: 'line',
-                    name: 'Popular Movies',
-                    data: movie_processed_json,
-                    lineWidth: 0,
-                    marker: {
-                      enable: true,
-                      symbol: 'circle',
-                      radius: 5
-                    },
-                    zIndex: 1
-                }],
-                exporting: {
-                  enabled: false
-                }
+
+                    // Add commas to tooltip values
+                    Highcharts.setOptions({
+                        lang: {
+                            thousandsSep: ','
+                        }
+                    });
+
+                    // Construct chart
+                    $('#linechart').highcharts({
+                        chart: {
+                            zoomType: 'x'
+                        },
+                        title: {
+                            text: 'Baby Names Over Time: '.concat(actor_first_name)
+                        },
+                        subtitle: {
+                            text: document.ontouchstart === undefined ?
+                                    'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Year'
+                            },
+                            min: 1910
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Yearly Name Count'
+                            }
+                        },
+                        tooltip: {
+                          shared: true,
+                          useHTML: true,
+                          formatter: function() {
+                              if (this.points[0].point.title != undefined) {
+                                  return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[0].point.title + '</strong></div>'
+                              } else if (this.points[1] == null) {
+                                  return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong></div>'
+                              } else {
+                                  return '<div style="text-align: center;"><strong>' + this.points[0].x + '</strong>' + '<br>' + '<strong>' + numberWithCommas(this.points[0].y) + '</strong> babies named <strong>' + actor_first_name + '</strong>' + '<br>' + '<strong>' + actor_full_name + '</strong>, <strong>' + this.points[1].point.title + '</strong></div>'
+                              }
+                          }
+                        },
+                        legend: {
+                            enabled: true
+                        },
+                        plotOptions: {
+                            series: {
+                                states: {
+                                    hover: {
+                                        enabled: false
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            type: 'line',
+                            name: 'Baby Name Count',
+                            data: baby_processed_json,
+                            lineWidth: 3,
+                            marker: {
+                                enabled: false
+                            },
+                            zIndex: 0
+                          },
+                          {
+                            type: 'line',
+                            name: 'Popular Movies',
+                            data: movie_processed_json,
+                            lineWidth: 0,
+                            marker: {
+                                enable: true,
+                                symbol: 'circle',
+                                radius: 5
+                            },
+                            zIndex: 1
+                        }],
+                        exporting: {
+                            enabled: false
+                        }
+                    });
+                });
             });
         });
     });
-  });
 }
