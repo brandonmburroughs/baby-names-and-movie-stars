@@ -7,8 +7,8 @@ var $input = $('#inputActorName');
 $input.on('keyup', function (event) {
   // If the "Enter" button is pressed
   if (event.which == 13) {
-    clearTimeout(typingTimer);
     generateChart();
+    clearTimeout(typingTimer);
   // Otherwise
   } else {
     clearTimeout(typingTimer);
