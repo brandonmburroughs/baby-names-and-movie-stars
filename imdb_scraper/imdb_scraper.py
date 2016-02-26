@@ -22,6 +22,38 @@ def get_full_link(relative_link):
     return full_link
 
 
+def get_actor_name_correct_spelling(actor_name):
+    """
+    Get the correct spelling of an actor's name
+
+    Parameters
+    ----------
+    actor_name : str
+        The name of the actor
+
+    Returns
+    -------
+    correct_actor_name : str
+        The corrected actor name
+    """
+    # Construct URL
+    imdb_search = "http://www.imdb.com/find?q=%s&s=nm" % actor_name
+
+    # Get page
+    r = requests.get(imdb_search)
+
+    # Soup HTML
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    # Get list of results
+    search_results = soup.find('td', attrs={'class': 'result_text'})
+
+    # Get links from first result (most likely to be the match)
+    correct_actor_name = str(search_results.find('a').text)
+
+    return correct_actor_name
+
+
 def get_actor_page(actor_name):
     """
     Get an actor's IMDB page link
