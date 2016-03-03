@@ -1,6 +1,6 @@
 // Setup before functions
 var typingTimer;                // Timer identifier
-var doneTypingInterval = 1000;  // Time in MS
+var doneTypingInterval = 2000;  // Time in MS
 var $input = $('#inputActorName');
 
 // On keyup, start the countdown
