@@ -18,7 +18,7 @@ $input.on('keyup', function (event) {
 
 // On keydown, clear the countdown 
 $input.on('keydown', function () {
-  
+    clearTimeout(typingTimer);
 });
 
 // Function to "proper case" names
