@@ -147,31 +147,29 @@ def get_actor_known_for_links(imdb_page):
     # Find "Known For" section
     knownfor = soup.find('div', attrs={'id': 'knownfor'})
 
-    # Find all the links in the "Known For" section
-    all_a = knownfor.findAll('a')
+    # Find all the movies in the "Known For" section
+    movies = knownfor.findAll('div', attrs={'class': 'knownfor-title'})
 
     # Get the titles and links
     known_for_movies = []
-    for link in all_a:
-        # Check for the appropriate link
-        if link.has_attr('href') and link.text != ' \n':
+    for movie in movies:
 
-            # Split the text to get the title and year
-            title, year = link.text.split('(')
+        # Split the text to get the title and year
+        title, _, year = [text for text in movie.text.split("\n") if text not in ['', ' ']]
 
-            # Clean up the title and year
-            title = title.encode('ascii','ignore').strip()
-            year = int(year[0:4])
+        # Clean up the title and year
+        title = title.encode('ascii','ignore').strip()
+        year = int(year.replace("(", "").replace(")", ""))
 
-            # Put this all in a dictionary
-            movie_dict = {
-                'link': get_full_link(link.get('href')),
-                'title': title,
-                'year': year
-            }
+        # Put this all in a dictionary
+        movie_dict = {
+            'link': get_full_link(movie.find('a').get("href")),
+            'title': title,
+            'year': year
+        }
 
-            # Append the dictionary to the list
-            known_for_movies.append(movie_dict)
+        # Append the dictionary to the list
+        known_for_movies.append(movie_dict)
 
     return known_for_movies
 
